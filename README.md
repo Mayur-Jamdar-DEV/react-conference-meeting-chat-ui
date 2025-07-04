@@ -1,3 +1,19 @@
+# 📱 Conference Meeting Chat UI
+
+A pixel-perfect responsive chat UI built using React and Tailwind CSS.
+
+## 🚀 Setup
+
+```bash
+git clone https://github.com/your-username/conference-chat-ui.git
+cd conference-chat-ui
+npm install
+npm start
+
+# snapshots
+![image](https://github.com/user-attachments/assets/15a1a465-0686-4a2d-b2c5-dbb2b84c3a6d)
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
