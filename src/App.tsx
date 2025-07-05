@@ -1,4 +1,5 @@
-import React from "react";
+// App.tsx
+import React, { useState, useEffect } from "react";
 import Header from "./components/Header";
 import MessageBubble from "./components/MessageBubble";
 import AudioMessage from "./components/AudioMessage";
@@ -6,72 +7,106 @@ import Poll from "./components/Poll";
 import MessageInput from "./components/MessageInput";
 import TypingIndicator from "./components/TypingIndicator";
 
+type Sender = "me" | "other";
+
+type ChatMessage =
+  | { type: "text"; text: string; sender: Sender; seen?: boolean }
+  | { type: "audio" }
+  | { type: "poll" };
+
 function App() {
+  const [messages, setMessages] = useState<ChatMessage[]>([
+    {
+      type: "text",
+      text: "Where do we want to meet guys? I need to know before",
+      sender: "other",
+    },
+    { type: "text", text: "Hm ... Let me think", sender: "me", seen: true },
+    { type: "audio" },
+    { type: "poll" },
+  ]);
+
+  const [showTyping, setShowTyping] = useState(false);
+
+  const handleSend = (text: string) => {
+    if (text.trim() !== "") {
+      setMessages((prev) => [
+        ...prev,
+        { type: "text", text, sender: "me", seen: false },
+      ]);
+      setShowTyping(false);
+    }
+  };
+
+  const handleTyping = () => {
+    setShowTyping(true);
+    setTimeout(() => setShowTyping(false), 2000);
+  };
+
+  useEffect(() => {
+    const el = document.getElementById("message-content");
+    if (el) el.scrollTop = el.scrollHeight;
+  }, [messages, showTyping]);
+
   return (
-    <div className="h-screen bg-[#f3f4f6] flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl w-full max-w-md h-full flex flex-col overflow-hidden relative">
+    <div className="h-screen bg-[#f3f4f6] flex items-center justify-center p-4 overflow-hidden">
+      <div className="bg-white rounded-2xl w-full max-w-md h-full flex flex-col relative overflow-hidden">
         <Header />
 
         <div
-          className="absolute left-0 right-0 flex justify-end pointer-events-none"
+          id="message-content"
+          className="flex-1 overflow-y-auto px-4 py-2 [&::-webkit-scrollbar]:hidden"
           style={{
-            top: 80,
-            zIndex: 5,
+            overflowX: "hidden",
+            scrollbarWidth: "none", // Firefox
+            msOverflowStyle: "none", // IE/Edge
           }}
         >
-          <div className="relative" style={{ right: "13px" }}>
-            <MessageBubble text="It’s an evening. Let’s do that" sender="me" forceOneLine />
-            <div
-              className="absolute -bottom-[6px] w-4 h-4 rounded-full bg-[#ffeccd] flex items-center justify-center p-[1px]"
-              style={{ left: "187px" }}
-            >
-              <svg
-                viewBox="0 0 21 18"
-                fill="none"
-                stroke="#75552f"
-                strokeWidth="3"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="w-[10px] h-[10px]"
-              >
-                <polyline points="16 6 10 14 6 11" />
-              </svg>
-            </div>
-          </div>
-        </div>
+          {/* Message sent earlier - manually placed before timestamp */}
+          <MessageBubble
+            text="It’s an evening. Let’s do that"
+            sender="me"
+            showTick
+            seen={true}
+          />
 
-        <div className="flex-1 overflow-hidden px-4 py-2 z-0">
           <p className="text-xs text-gray-400 text-center my-2">23:40</p>
-          <MessageBubble text="Where do we want to meet guys? I need to know before" sender="other" />
-          <MessageBubble text="Hm ... Let me think" sender="me" />
-          <AudioMessage />
-          <Poll />
-          <TypingIndicator />
+
+          {messages.map((msg, idx) => {
+            // Avoid duplicate of already rendered message
+            if (
+              msg.type === "text" &&
+              msg.text === "It’s an evening. Let’s do that"
+            ) {
+              return null;
+            }
+
+            if (msg.type === "text") {
+              return (
+                <MessageBubble
+                  key={idx}
+                  text={msg.text}
+                  sender={msg.sender}
+                  showTick={msg.sender === "me"}
+                  seen={msg.seen}
+                />
+              );
+            } else if (msg.type === "audio") {
+              return <AudioMessage key={idx} />;
+            } else if (msg.type === "poll") {
+              return <Poll key={idx} />;
+            }
+            return null;
+          })}
+
+          {/* Static typing indicator for "other" */}
+          <TypingIndicator sender="other" />
+
+          {/* Show "me" typing when user types */}
+          {showTyping && <TypingIndicator sender="me" />}
         </div>
 
-        <button
-          className="absolute left-1/2 -translate-x-1/2 z-10 bg-white shadow-lg rounded-full w-10 h-10 flex items-center justify-center border border-gray-200"
-          style={{ bottom: "141px", boxShadow: "0 2px 8px rgba(0,0,0,0.08)" }}
-          aria-label="Scroll to bottom"
-        >
-          <svg
-            width="18"
-            height="18"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M12 5V19M19 12L12 19L5 12"
-              stroke="#222"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        </button>
-
-        <MessageInput />
+        <MessageInput onSend={handleSend} onTyping={handleTyping} />
       </div>
     </div>
   );
