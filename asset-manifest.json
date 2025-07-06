@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/react-conference-meeting-chat-ui/static/css/main.04a6145a.css",
-    "main.js": "/react-conference-meeting-chat-ui/static/js/main.66d88574.js",
+    "main.js": "/react-conference-meeting-chat-ui/static/js/main.049d572e.js",
     "static/js/453.86e07faa.chunk.js": "/react-conference-meeting-chat-ui/static/js/453.86e07faa.chunk.js",
     "index.html": "/react-conference-meeting-chat-ui/index.html",
     "main.04a6145a.css.map": "/react-conference-meeting-chat-ui/static/css/main.04a6145a.css.map",
-    "main.66d88574.js.map": "/react-conference-meeting-chat-ui/static/js/main.66d88574.js.map",
+    "main.049d572e.js.map": "/react-conference-meeting-chat-ui/static/js/main.049d572e.js.map",
     "453.86e07faa.chunk.js.map": "/react-conference-meeting-chat-ui/static/js/453.86e07faa.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.04a6145a.css",
-    "static/js/main.66d88574.js"
+    "static/js/main.049d572e.js"
   ]
 }
