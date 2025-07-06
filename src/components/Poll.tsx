@@ -1,5 +1,12 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Smile, MessageCircle, MoreHorizontal } from "lucide-react";
+import {
+  Smile,
+  MessageCircle,
+  MoreHorizontal,
+  Edit2,
+  Trash,
+  Save,
+} from "lucide-react";
 
 type PollOption = "Pizza" | "Burgers";
 const emojiList = ["😊", "😂", "👍", "❤️", "🔥", "🎉", "😢", "😎", "🙏", "💡"];
@@ -17,6 +24,11 @@ const Poll = () => {
   const [emojiAnimate, setEmojiAnimate] = useState(false);
   const emojiPickerRef = useRef<HTMLDivElement>(null);
 
+  const [showCommentBox, setShowCommentBox] = useState(false);
+  const [comment, setComment] = useState("");
+  const [submittedComment, setSubmittedComment] = useState<string | null>(null);
+  const [isEditingComment, setIsEditingComment] = useState(false);
+
   const handleVote = (option: PollOption) => {
     if (hasVoted) return;
     setVotes((prev) => ({ ...prev, [option]: prev[option] + 1 }));
@@ -29,8 +41,6 @@ const Poll = () => {
   const handleEmojiReact = (emoji: string) => {
     setReactionEmoji(emoji);
     setEmojiAnimate(true);
-
-    // Remove animation after one-time bounce
     setTimeout(() => setEmojiAnimate(false), 500);
     setShowEmojiPicker(false);
   };
@@ -66,7 +76,7 @@ const Poll = () => {
       />
 
       <div className="relative">
-        <div className="bg-[#f1f0ec] p-4 rounded-xl shadow-sm max-w-[280px] min-w-[210px] relative">
+        <div className="bg-[#f1f0ec] p-4 rounded-xl shadow-sm w-[210px] relative">
           <p className="text-sm mb-2 font-medium whitespace-nowrap text-[#3b2d00]">
             What do you want to eat?
           </p>
@@ -105,7 +115,7 @@ const Poll = () => {
             {totalVotes} votes · {hasVoted ? "You voted" : "Vote to see results"}
           </p>
 
-          {/* Reaction Emoji (bottom-right corner) */}
+          {/* Reaction Emoji */}
           {reactionEmoji && (
             <div
               className={`absolute -bottom-3 right-3 text-lg ${
@@ -115,14 +125,64 @@ const Poll = () => {
               {reactionEmoji}
             </div>
           )}
+
+          {/* Comment Box (Add/Edit Mode) */}
+          {showCommentBox && (
+            <div className="mt-3">
+              <textarea
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
+                className="w-[180px] text-sm border border-gray-300 rounded-md px-2 py-1 focus:outline-none"
+                rows={2}
+                placeholder="Write a comment..."
+              />
+              <button
+                onClick={() => {
+                  if (comment.trim()) {
+                    setSubmittedComment(comment);
+                    setComment("");
+                    setIsEditingComment(false);
+                    setShowCommentBox(false);
+                  }
+                }}
+                className="mt-1 text-xs text-white bg-black px-3 py-1 rounded-md"
+              >
+                {isEditingComment ? "Save" : "Submit"}
+              </button>
+            </div>
+          )}
+
+          {/* Display Comment */}
+          {submittedComment && !showCommentBox && (
+            <div className="mt-3 ml-1 text-sm bg-white border border-gray-200 rounded-lg px-3 py-2 w-full shadow-sm text-gray-700 relative">
+              💬 {submittedComment}
+              <div className="absolute top-1 right-1 flex space-x-1">
+                <Edit2
+                  className="w-4 h-4 text-blue-500 cursor-pointer"
+                  onClick={() => {
+                    setComment(submittedComment);
+                    setShowCommentBox(true);
+                    setIsEditingComment(true);
+                  }}
+                />
+                <Trash
+                  className="w-4 h-4 text-red-500 cursor-pointer"
+                  onClick={() => {
+                    setSubmittedComment(null);
+                    setComment("");
+                  }}
+                />
+              </div>
+            </div>
+          )}
         </div>
 
-        {/* Icon Actions (Smile + Emoji Picker) */}
+        {/* Icon Row: Emoji, Comment, More */}
         <div
           className="absolute top-1/2 -translate-y-1/2 flex items-center space-x-2"
           style={{ left: "34vh" }}
         >
-          {/* Emoji button with picker */}
+          {/* Emoji Picker */}
           <div className="relative">
             <Smile
               className="w-4 h-4 text-gray-500 cursor-pointer"
@@ -146,7 +206,16 @@ const Poll = () => {
             )}
           </div>
 
-          <MessageCircle className="w-4 h-4 text-gray-500" />
+          {/* Comment Icon */}
+          <MessageCircle
+            className="w-4 h-4 text-gray-500 cursor-pointer"
+            onClick={() => {
+              setShowCommentBox((prev) => !prev);
+              setIsEditingComment(false);
+            }}
+          />
+
+          {/* More Icon */}
           <MoreHorizontal className="w-4 h-4 text-gray-500" />
         </div>
       </div>

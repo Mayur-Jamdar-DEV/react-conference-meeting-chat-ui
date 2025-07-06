@@ -1,5 +1,14 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Smile, Paperclip, ChevronDown, Plus } from "lucide-react";
+import {
+  Smile,
+  Paperclip,
+  ChevronDown,
+  Plus,
+  FileText,
+  Image as ImageIcon,
+  Video,
+  Music,
+} from "lucide-react";
 
 type Props = {
   onSend: (text: string) => void;
@@ -13,6 +22,7 @@ const MessageInput = ({ onSend, onTyping }: Props) => {
   const [file, setFile] = useState<File | null>(null);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const emojiPickerRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleSend = () => {
     const fullMessage = file ? `${message} 📎 ${file.name}` : message;
@@ -21,11 +31,15 @@ const MessageInput = ({ onSend, onTyping }: Props) => {
       setMessage("");
       setFile(null);
       setShowEmojiPicker(false);
+      if (fileInputRef.current) fileInputRef.current.value = "";
     }
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files?.[0]) setFile(e.target.files[0]);
+    if (e.target.files?.[0]) {
+      setFile(e.target.files[0]);
+      onTyping();
+    }
   };
 
   const handleEmojiSelect = (emoji: string) => {
@@ -60,15 +74,27 @@ const MessageInput = ({ onSend, onTyping }: Props) => {
     };
   }, [showEmojiPicker]);
 
+  const renderFileIcon = () => {
+    if (!file) return null;
+    const type = file.type;
+
+    if (type.startsWith("image/")) return <ImageIcon className="w-4 h-4 text-gray-500" />;
+    if (type === "application/pdf") return <FileText className="w-4 h-4 text-gray-500" />;
+    if (type.startsWith("video/")) return <Video className="w-4 h-4 text-gray-500" />;
+    if (type.startsWith("audio/")) return <Music className="w-4 h-4 text-gray-500" />;
+
+    return <Paperclip className="w-4 h-4 text-gray-500" />;
+  };
+
   return (
     <div className="bg-white px-4 pt-2 pb-4 rounded-b-2xl">
       <div className="relative pt-2">
         <div
-          className="bg-[#f3f4f6] rounded-2xl px-4 pb-12 relative"
+          className="bg-[#f3f4f6] rounded-2xl px-4 pb-12 relative border border-gray-300"
           style={{ height: "110px" }}
         >
           <textarea
-            className="w-full bg-transparent text-sm resize-none focus:outline-none mt-1"
+            className="w-full bg-transparent text-sm resize-none focus:outline-none mt-2"
             placeholder="Message to Conference Meeting"
             value={message}
             onChange={(e) => {
@@ -79,8 +105,30 @@ const MessageInput = ({ onSend, onTyping }: Props) => {
             rows={2}
           />
 
+          {/* File preview */}
+          {file && (
+            <div
+              className="absolute left-4 bottom-[50px] bg-white border border-gray-300 rounded-md px-3 py-1 text-xs text-gray-700 flex items-center justify-between max-w-[90%] h-6 w-fit"
+              style={{ height: "24px" }}
+            >
+              <div className="flex items-center gap-2 truncate">
+                {renderFileIcon()}
+                <span className="truncate max-w-[160px]">{file.name}</span>
+              </div>
+              <button
+                onClick={() => {
+                  setFile(null);
+                  if (fileInputRef.current) fileInputRef.current.value = "";
+                }}
+                className="text-red-500 hover:underline ml-2"
+              >
+                Remove
+              </button>
+            </div>
+          )}
+
+          {/* Icons row */}
           <div className="absolute bottom-3 left-4 flex items-center gap-3">
-            {/* Plus icon with square */}
             <button
               type="button"
               className="w-8 h-8 bg-white border border-gray-300 rounded-xl flex items-center justify-center shadow-sm"
@@ -88,7 +136,6 @@ const MessageInput = ({ onSend, onTyping }: Props) => {
               <Plus className="w-4 h-4 text-gray-700" />
             </button>
 
-            {/* Emoji icon (no square) */}
             <div className="relative">
               <button
                 type="button"
@@ -115,13 +162,18 @@ const MessageInput = ({ onSend, onTyping }: Props) => {
               )}
             </div>
 
-            {/* Paperclip (no square) */}
             <label className="cursor-pointer">
-              <input type="file" hidden onChange={handleFileChange} />
+              <input
+                type="file"
+                hidden
+                onChange={handleFileChange}
+                ref={fileInputRef}
+              />
               <Paperclip className="w-5 h-5 text-gray-400 transform rotate-[30deg]" />
             </label>
           </div>
 
+          {/* Send button */}
           <button
             type="button"
             onClick={handleSend}

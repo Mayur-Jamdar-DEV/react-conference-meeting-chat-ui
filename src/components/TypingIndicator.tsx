@@ -1,3 +1,4 @@
+// TypingIndicator.tsx
 type Props = {
   sender: "me" | "other";
 };
@@ -20,7 +21,7 @@ const TypingIndicator = ({ sender }: Props) => {
 
       <div
         className={`px-3 py-2 rounded-xl max-w-[40%] ${
-          isMe ? "bg-[#ffeccd]" : ""
+          isMe ? "bg-[#ffeccd]" : "bg-[#f1f0ec]"
         }`}
       >
         <div className="flex space-x-1 justify-end">
