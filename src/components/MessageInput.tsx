@@ -113,7 +113,6 @@ const MessageInput = ({ onSend, onTyping }: Props) => {
             rows={2}
           />
 
-          {/* Non-audio file preview */}
           {file && !isAudioFile && (
             <div
               className="absolute left-4 bottom-[50px] bg-white border border-gray-300 rounded-md px-3 py-1 text-xs text-gray-700 flex items-center justify-between max-w-[90%] h-6 w-fit"
@@ -135,7 +134,6 @@ const MessageInput = ({ onSend, onTyping }: Props) => {
             </div>
           )}
 
-          {/* Audio file preview */}
           {file && isAudioFile && (
             <div className="absolute bottom-[45px] bg-white border border-gray-300 rounded-md px-3 py-1 text-xs text-gray-700 flex items-center gap-3 max-w-[60%]" style={{ height: "56px" }}>
               <audio controls src={URL.createObjectURL(file)} className="max-w-[200px]" />
@@ -151,7 +149,6 @@ const MessageInput = ({ onSend, onTyping }: Props) => {
             </div>
           )}
 
-          {/* Icons row */}
           <div className="absolute bottom-3 left-4 flex items-center gap-3">
             <button
               type="button"
@@ -197,7 +194,6 @@ const MessageInput = ({ onSend, onTyping }: Props) => {
             </label>
           </div>
 
-          {/* Send button */}
           <button
             type="button"
             onClick={handleSend}

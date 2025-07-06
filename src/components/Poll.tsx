@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
   Smile,
   MessageCircle,
@@ -68,7 +68,6 @@ const Poll = () => {
 
   return (
     <div className="flex items-center justify-start my-2">
-      {/* Avatar */}
       <img
         src="https://randomuser.me/api/portraits/men/2.jpg"
         className="w-6 h-6 rounded-full mr-2 self-end"
@@ -81,7 +80,6 @@ const Poll = () => {
             What do you want to eat?
           </p>
 
-          {/* Poll Options */}
           <div className="flex flex-col gap-2">
             {(Object.keys(votes) as PollOption[]).map((item) => {
               const isSelected = selectedOption === item;
@@ -97,9 +95,8 @@ const Poll = () => {
                   onClick={() => handleVote(item)}
                 >
                   <span
-                    className={`w-4 h-4 border border-gray-300 rounded-full mr-3 ${
-                      isSelected ? "bg-black" : "bg-[#f1f0ec]"
-                    }`}
+                    className={`w-4 h-4 border border-gray-300 rounded-full mr-3 ${isSelected ? "bg-black" : "bg-[#f1f0ec]"
+                      }`}
                   />
                   <span className="text-[#3b2d00] font-medium">{item}</span>
                   {hasVoted && (
@@ -110,23 +107,19 @@ const Poll = () => {
             })}
           </div>
 
-          {/* Vote Info */}
           <p className="text-xs text-gray-400 mt-2 pl-8">
             {totalVotes} votes · {hasVoted ? "You voted" : "Vote to see results"}
           </p>
 
-          {/* Reaction Emoji */}
           {reactionEmoji && (
             <div
-              className={`absolute -bottom-3 right-3 text-lg ${
-                emojiAnimate ? "animate-bounce" : ""
-              }`}
+              className={`absolute -bottom-3 right-3 text-lg ${emojiAnimate ? "animate-bounce" : ""
+                }`}
             >
               {reactionEmoji}
             </div>
           )}
 
-          {/* Comment Box (Add/Edit Mode) */}
           {showCommentBox && (
             <div className="mt-3">
               <textarea
@@ -152,7 +145,6 @@ const Poll = () => {
             </div>
           )}
 
-          {/* Display Comment */}
           {submittedComment && !showCommentBox && (
             <div className="mt-3 ml-1 text-sm bg-white border border-gray-200 rounded-lg px-3 py-2 w-full shadow-sm text-gray-700 relative">
               💬 {submittedComment}
@@ -177,12 +169,10 @@ const Poll = () => {
           )}
         </div>
 
-        {/* Icon Row: Emoji, Comment, More */}
         <div
           className="absolute top-1/2 -translate-y-1/2 flex items-center space-x-2"
           style={{ left: "34vh" }}
         >
-          {/* Emoji Picker */}
           <div className="relative">
             <Smile
               className="w-4 h-4 text-gray-500 cursor-pointer"
@@ -206,7 +196,6 @@ const Poll = () => {
             )}
           </div>
 
-          {/* Comment Icon */}
           <MessageCircle
             className="w-4 h-4 text-gray-500 cursor-pointer"
             onClick={() => {
@@ -215,7 +204,6 @@ const Poll = () => {
             }}
           />
 
-          {/* More Icon */}
           <MoreHorizontal className="w-4 h-4 text-gray-500" />
         </div>
       </div>

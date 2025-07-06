@@ -1,4 +1,3 @@
-import React from "react";
 import { ArrowLeft, MoreHorizontal } from "lucide-react";
 
 const Header = () => {

@@ -1,5 +1,4 @@
-// AudioMessage.tsx
-import React, { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect } from "react";
 import { Pause, Play } from "lucide-react";
 
 const formatTime = (seconds: number): string => {
@@ -28,7 +27,7 @@ const AudioMessage = ({ url, sender, onPlayRequest }: Props) => {
     if (isPlaying) {
       audio.pause();
     } else {
-      onPlayRequest(audio); // 👈 Pause others
+      onPlayRequest(audio);
       audio.play();
     }
   };
@@ -78,16 +77,16 @@ const AudioMessage = ({ url, sender, onPlayRequest }: Props) => {
         </button>
 
         <input
-  type="range"
-  value={progress}
-  readOnly
-  className="w-full h-[2px] appearance-none bg-transparent relative custom-range"
-  style={{
-    background: `linear-gradient(to right, black ${progress}%, #d1d5db ${progress}%)`,
-    borderRadius: "999px",
-    WebkitAppearance: "none",
-  }}
-/>
+          type="range"
+          value={progress}
+          readOnly
+          className="w-full h-[2px] appearance-none bg-transparent relative custom-range"
+          style={{
+            background: `linear-gradient(to right, black ${progress}%, #d1d5db ${progress}%)`,
+            borderRadius: "999px",
+            WebkitAppearance: "none",
+          }}
+        />
 
         <span className="text-xs ml-2 shrink-0 text-gray-500">
           {formatTime(currentTime)} / {formatTime(duration)}
@@ -102,7 +101,6 @@ const AudioMessage = ({ url, sender, onPlayRequest }: Props) => {
 
       <style>
         {`
-
           .custom-range::-webkit-slider-thumb {
             appearance: none;
             width: 13px;
@@ -125,22 +123,22 @@ const AudioMessage = ({ url, sender, onPlayRequest }: Props) => {
           }
 
           .custom-range::-moz-range-thumb {
-      width: 13px;
-      height: 13px;
-      background: white;
-      border: 1px solid #d1d5db;
-      border-radius: 999px;
-      cursor: pointer;
-    }
+            width: 13px;
+            height: 13px;
+            background: white;
+            border: 1px solid #d1d5db;
+            border-radius: 999px;
+            cursor: pointer;
+          }
 
-    .custom-range::-ms-thumb {
-      width: 13px;
-      height: 13px;
-      background: white;
-      border: 1px solid #d1d5db;
-      border-radius: 999px;
-      cursor: pointer;
-    }
+          .custom-range::-ms-thumb {
+            width: 13px;
+            height: 13px;
+            background: white;
+            border: 1px solid #d1d5db;
+            border-radius: 999px;
+            cursor: pointer;
+          }
         `}
       </style>
     </div>

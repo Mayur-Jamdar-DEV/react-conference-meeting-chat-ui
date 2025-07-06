@@ -1,5 +1,4 @@
-// App.tsx
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import Header from "./components/Header";
 import MessageBubble from "./components/MessageBubble";
 import AudioMessage from "./components/AudioMessage";
@@ -33,8 +32,6 @@ function App() {
   const [showTyping, setShowTyping] = useState(false);
   const [showScrollToBottom, setShowScrollToBottom] = useState(false);
   const messageContentRef = useRef<HTMLDivElement>(null);
-
-  // 👇 Ref to keep track of current playing audio element
   const currentlyPlayingRef = useRef<HTMLAudioElement | null>(null);
 
   const handleAudioPlay = (audioEl: HTMLAudioElement) => {
@@ -56,7 +53,7 @@ function App() {
         scrollToBottom();
         return;
       }
-    } catch {}
+    } catch { }
 
     if (text.trim() !== "") {
       setMessages((prev) => [
@@ -156,7 +153,6 @@ function App() {
             return null;
           })}
 
-          {/* Typing indicators */}
           <div className="mt-2 space-y-1">
             <TypingIndicator sender="other" />
             {showTyping && <TypingIndicator sender="me" />}

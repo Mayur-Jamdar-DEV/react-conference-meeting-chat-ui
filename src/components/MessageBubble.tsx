@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import { ReactNode } from "react";
 import {
   FileText,
   Image as ImageIcon,
@@ -87,9 +87,8 @@ const MessageBubble = ({
 
       <div className={`relative ${isMe ? "max-w-[80%] mr-2" : "max-w-[80%] mr-0"}`}>
         <div
-          className={`px-4 py-2 rounded-xl text-sm break-words ${
-            isMe ? "bg-[#ffeccd] text-gray-800" : "bg-[#f1f0ec] text-gray-900"
-          } ${forceOneLine ? "whitespace-nowrap w-max" : ""}`}
+          className={`px-4 py-2 rounded-xl text-sm break-words ${isMe ? "bg-[#ffeccd] text-gray-800" : "bg-[#f1f0ec] text-gray-900"
+            } ${forceOneLine ? "whitespace-nowrap w-max" : ""}`}
         >
           {parseTextWithFileIcon(text)}
           {children && <div className="mt-1">{children}</div>}
