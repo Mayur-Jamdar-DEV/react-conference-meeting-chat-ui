@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/react-conference-meeting-chat-ui/static/css/main.6ce3f7cd.css",
-    "main.js": "/react-conference-meeting-chat-ui/static/js/main.9109596e.js",
+    "main.css": "/react-conference-meeting-chat-ui/static/css/main.04a6145a.css",
+    "main.js": "/react-conference-meeting-chat-ui/static/js/main.66d88574.js",
     "static/js/453.86e07faa.chunk.js": "/react-conference-meeting-chat-ui/static/js/453.86e07faa.chunk.js",
     "index.html": "/react-conference-meeting-chat-ui/index.html",
-    "main.6ce3f7cd.css.map": "/react-conference-meeting-chat-ui/static/css/main.6ce3f7cd.css.map",
-    "main.9109596e.js.map": "/react-conference-meeting-chat-ui/static/js/main.9109596e.js.map",
+    "main.04a6145a.css.map": "/react-conference-meeting-chat-ui/static/css/main.04a6145a.css.map",
+    "main.66d88574.js.map": "/react-conference-meeting-chat-ui/static/js/main.66d88574.js.map",
     "453.86e07faa.chunk.js.map": "/react-conference-meeting-chat-ui/static/js/453.86e07faa.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.6ce3f7cd.css",
-    "static/js/main.9109596e.js"
+    "static/css/main.04a6145a.css",
+    "static/js/main.66d88574.js"
   ]
 }
