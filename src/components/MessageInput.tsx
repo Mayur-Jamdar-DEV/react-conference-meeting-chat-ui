@@ -24,15 +24,23 @@ const MessageInput = ({ onSend, onTyping }: Props) => {
   const emojiPickerRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const isAudioFile = file?.type.startsWith("audio/");
+
   const handleSend = () => {
-    const fullMessage = file ? `${message} 📎 ${file.name}` : message;
-    if (fullMessage.trim()) {
-      onSend(fullMessage);
-      setMessage("");
-      setFile(null);
-      setShowEmojiPicker(false);
-      if (fileInputRef.current) fileInputRef.current.value = "";
+    if (file && isAudioFile) {
+      const audioUrl = URL.createObjectURL(file);
+      onSend(JSON.stringify({ type: "audio", url: audioUrl }));
+    } else {
+      const fullMessage = file ? `${message} 📎 ${file.name}` : message;
+      if (fullMessage.trim()) {
+        onSend(fullMessage);
+      }
     }
+
+    setMessage("");
+    setFile(null);
+    setShowEmojiPicker(false);
+    if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -105,8 +113,8 @@ const MessageInput = ({ onSend, onTyping }: Props) => {
             rows={2}
           />
 
-          {/* File preview */}
-          {file && (
+          {/* Non-audio file preview */}
+          {file && !isAudioFile && (
             <div
               className="absolute left-4 bottom-[50px] bg-white border border-gray-300 rounded-md px-3 py-1 text-xs text-gray-700 flex items-center justify-between max-w-[90%] h-6 w-fit"
               style={{ height: "24px" }}
@@ -121,6 +129,22 @@ const MessageInput = ({ onSend, onTyping }: Props) => {
                   if (fileInputRef.current) fileInputRef.current.value = "";
                 }}
                 className="text-red-500 hover:underline ml-2"
+              >
+                Remove
+              </button>
+            </div>
+          )}
+
+          {/* Audio file preview */}
+          {file && isAudioFile && (
+            <div className="absolute bottom-[45px] bg-white border border-gray-300 rounded-md px-3 py-1 text-xs text-gray-700 flex items-center gap-3 max-w-[60%]" style={{ height: "56px" }}>
+              <audio controls src={URL.createObjectURL(file)} className="max-w-[200px]" />
+              <button
+                onClick={() => {
+                  setFile(null);
+                  if (fileInputRef.current) fileInputRef.current.value = "";
+                }}
+                className="text-red-500 hover:underline"
               >
                 Remove
               </button>

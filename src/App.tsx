@@ -11,7 +11,7 @@ type Sender = "me" | "other";
 
 type ChatMessage =
   | { type: "text"; text: string; sender: Sender; seen?: boolean }
-  | { type: "audio" }
+  | { type: "audio"; url: string; sender: Sender }
   | { type: "poll" };
 
 function App() {
@@ -22,7 +22,11 @@ function App() {
       sender: "other",
     },
     { type: "text", text: "Hm ... Let me think", sender: "me", seen: true },
-    { type: "audio" },
+    {
+      type: "audio",
+      url: `${process.env.PUBLIC_URL}/audio/sample.mp3`,
+      sender: "me",
+    },
     { type: "poll" },
   ]);
 
@@ -30,15 +34,39 @@ function App() {
   const [showScrollToBottom, setShowScrollToBottom] = useState(false);
   const messageContentRef = useRef<HTMLDivElement>(null);
 
+  // 👇 Ref to keep track of current playing audio element
+  const currentlyPlayingRef = useRef<HTMLAudioElement | null>(null);
+
+  const handleAudioPlay = (audioEl: HTMLAudioElement) => {
+    if (currentlyPlayingRef.current && currentlyPlayingRef.current !== audioEl) {
+      currentlyPlayingRef.current.pause();
+      currentlyPlayingRef.current.currentTime = 0;
+    }
+    currentlyPlayingRef.current = audioEl;
+  };
+
   const handleSend = (text: string) => {
+    try {
+      const parsed = JSON.parse(text);
+      if (parsed.type === "audio") {
+        setMessages((prev) => [
+          ...prev,
+          { type: "audio", url: parsed.url, sender: "me" },
+        ]);
+        scrollToBottom();
+        return;
+      }
+    } catch {}
+
     if (text.trim() !== "") {
       setMessages((prev) => [
         ...prev,
         { type: "text", text, sender: "me", seen: false },
       ]);
-      setShowTyping(false);
-      scrollToBottom();
     }
+
+    setShowTyping(false);
+    scrollToBottom();
   };
 
   const handleTyping = () => {
@@ -113,7 +141,14 @@ function App() {
                 />
               );
             } else if (msg.type === "audio") {
-              return <AudioMessage key={idx} />;
+              return (
+                <AudioMessage
+                  key={idx}
+                  url={msg.url}
+                  sender={msg.sender}
+                  onPlayRequest={handleAudioPlay}
+                />
+              );
             } else if (msg.type === "poll") {
               return <Poll key={idx} />;
             }
@@ -128,7 +163,6 @@ function App() {
           </div>
         </div>
 
-        {/* Scroll to bottom button */}
         {showScrollToBottom && (
           <button
             onClick={scrollToBottom}
